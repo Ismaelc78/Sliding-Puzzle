@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Main {
+public class  Main {
 
     static String UP = "up";
     static String DOWN = "down";
@@ -10,18 +10,21 @@ public class Main {
     static Integer nodesExamined = 0;
     static HashMap<List<Integer>, Integer> visitedBoards = new HashMap<>();
     static Stack<String> solutionMoves = new Stack<String>();
+    static Integer depthCount = 26;
     public static void main(String[] args) {
 
         List<Integer> goal = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8);
-        List<Integer> start = Arrays.asList(7, 2, 4, 5, 0, 6, 8, 3, 1);
+        List<Integer> recursStart = Arrays.asList(7, 2, 4, 5, 0, 6, 8, 3, 1);;
+        List<Integer> itStart = Arrays.asList(7, 2, 4, 5, 0, 6, 8, 3, 1);;
         int count = 0;
-        printBoard(start, "Start");
+        printBoard(recursStart, "Start");
         printBoard(goal, "Goal");
-        Boolean solutionFound = backtrackingDFS(start, goal, "", count);
+        Boolean solutionFound = backtrackingDFS(recursStart, goal, "", count);
         System.out.println("Nodes Examined = " + nodesExamined);
         while (!solutionMoves.empty()){
             System.out.println(solutionMoves.pop());
         }
+        iterativeDFS(itStart, goal);
     }
 
     private static void printBoard(List<Integer> board, String boardName){
@@ -95,7 +98,7 @@ public class Main {
             visitedBoards.put(board, count);
         }
         nodesExamined += 1;
-        if (count > 30){
+        if (count > depthCount){
             return false;
         }
         if (board.equals(goal)){
@@ -114,5 +117,19 @@ public class Main {
             count -=1;
         }
         return false;
+    }
+
+    private static void iterativeDFS(List<Integer> board, List<Integer> goal){
+        depthCount = 0;
+        nodesExamined = 1;
+        boolean solutionFound = false;
+        while(!solutionFound){
+            System.out.println(depthCount + ": Cumulative nodes-examined = " + nodesExamined);
+            solutionFound = backtrackingDFS(board, goal, "", 0);
+            depthCount += 1;
+        }
+        while (!solutionMoves.empty()){
+            System.out.println(solutionMoves.pop());
+        }
     }
 }
