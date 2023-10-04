@@ -69,6 +69,11 @@ public class Board {
         }
     }
 
+    /***
+     * Rules to check against
+     * @param prevMove -
+     * @return validMoves - List<String>
+     */
     public List<String> getMovesList(String prevMove){
         List<String> validMoves = new ArrayList<>();
         int indexOfZero = currentBoard.indexOf(0);
@@ -88,6 +93,11 @@ public class Board {
         return validMoves;
     }
 
+    /***
+     * To keep track of boards that have
+     * been visited
+     * @return bool
+     */
     public boolean visited(){
         return (visitedBoards.containsKey(currentBoard) && visitedBoards.get(currentBoard) < count);
     }
