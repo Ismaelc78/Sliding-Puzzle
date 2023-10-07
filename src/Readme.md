@@ -29,9 +29,17 @@ The problem is to solve the puzzle using different uniformed and informed algori
 
 ## Solution
 
+### Design 
 
 
 ## Results
 
+### Backtracking
+
+### Backtracking Iteratively
+
+### Graph Search
+
+### Algorithm A<sup>*</sup>
 
 ## Conclusion
