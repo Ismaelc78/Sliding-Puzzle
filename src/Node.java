@@ -2,15 +2,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class Node {
     Board board = new Board();
     List<Node> successorBoards = new ArrayList<>();
     String prevMove;
     Node parentNode;
+    int tilesMatched;
+    int manhattanDistance;
 
-    public Node(List<Integer> newBoard, String move, Node prevNode){
-        board.setCurrentBoard(newBoard);
+    int hn;
+    public Node(List<Integer> newBoard, List<Integer> goal, String move, Node prevNode){
+        board.setBoards(goal, newBoard);
         prevMove = move;
         parentNode = prevNode;
     }
@@ -36,8 +38,25 @@ public class Node {
                 }
             }
             if (!alreadyClosed && !alreadyOpened){
-                successorBoards.add(new Node(temp, move, this));
+                successorBoards.add(new Node(temp, board.getGoal(), move, this));
             }
+        }
+    }
+
+    public void heuristics(){
+        for (Integer a : board.getCurrentBoard()){
+            int currentPos = board.getCurrentBoard().indexOf(a);
+            int goalPos = board.getGoal().indexOf(a);
+            if (currentPos == goalPos){
+                tilesMatched += 1;
+            }
+            else {
+                int xDiff = Math.abs( (currentPos % board.n) - (goalPos % board.n));
+                int yDiff = Math.abs( (currentPos / board.n) - (goalPos / board.n));
+                manhattanDistance += (xDiff + yDiff);
+            }
+            hn = tilesMatched + manhattanDistance;
+
         }
     }
 }

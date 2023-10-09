@@ -432,6 +432,118 @@ To follow that, I created the following function, leveraging Node and Board clas
         }
     }
 ```
+
+The A* (A Start) algorithm was to implement the graph search & nodes from the Graph Search algorithm.
+The main difference is that the A Star aglorithm uses heursitics to weigh the distance to the solution for each board state.
+In this case, the 2 heuristics used were:
+- h1 - the number of misplaced tiles of current board
+- h2 - the sum of the distances of the tiles from their goal position(i.e. Manhattan Distance)
+
+So, the steps to interject were:
+1. Get the heuristic values;
+2. Sort Open list by heuristic values on each loop;
+
+I had to add a function in Node class to calculate the Heuristic Values:
+
+```java
+public class Node {
+    ...
+
+    public void heuristics() {
+        for (Integer a : board.getCurrentBoard()) {
+            int currentPos = board.getCurrentBoard().indexOf(a);
+            int goalPos = board.getGoal().indexOf(a);
+            if (currentPos == goalPos) {
+                tilesMatched += 1;
+            } else {
+                int xDiff = Math.abs((currentPos % board.n) - (goalPos % board.n));
+                int yDiff = Math.abs((currentPos / board.n) - (goalPos / board.n));
+                manhattanDistance += (xDiff + yDiff);
+            }
+            hn = tilesMatched + manhattanDistance;
+
+        }
+    }
+}
+```
+I also needed to add a new class to Sort the OPEN list by heuristic value:
+
+```java
+public class SortNodes implements Comparator<Node> {
+    public int compare(Node a, Node b){
+        return a.hn - b.hn;
+    }
+}
+```
+That gives me the following function:
+
+```java
+    private static void aStarGraph(List<Integer> goal, List<Integer> start){
+        long timeStart = System.currentTimeMillis();
+        System.out.println("\n\nA Star Algorithm");
+        List<Node> open = new ArrayList<>();
+        List<Node> closed = new ArrayList<>();
+        open.add(new Node(start, goal,"", null));
+        open.get(0).heuristics();
+        int nodesExamined = 0;
+        int nodesGenerated = 0;
+        while(!open.isEmpty()){
+            //Difference from GraphSearch- sorting by heuristic values
+            open.sort(new SortNodes());
+            if(open.get(0).board.getCurrentBoard().equals(goal)){
+                System.out.println("Nodes gerenated : " + nodesGenerated);
+                System.out.println("Nodes examined : " + nodesExamined);
+                timer(timeStart, System.currentTimeMillis());
+                printPath(open.get(0));
+                break;
+            }
+            closed.add(open.get(0));
+            open.get(0).createSuccessors(open, closed);
+            // Diff from GraphSearch - calculate heuristics
+            for (Node node : open.get(0).successorBoards){
+                node.heuristics();
+            }
+            open.addAll(open.get(0).successorBoards);
+            nodesGenerated += open.get(0).successorBoards.size();
+            open.remove(0);
+            if(nodesExamined > 600000){
+                break;
+            }
+            nodesExamined += 1;
+        }
+    }
+```
+Finally I called the classes and functions from the main function in Main.java:
+
+```java
+public static void main(String[] args) {
+
+        JsonParser data = new JsonParser();
+        data.importFile("src/puzzles/problem-1.json");
+        long start;
+        if(data.validKeys && data.validValues){
+            // Backtrack DFS (DATALIST)
+            dfs(data);
+
+            // Backtrack Iterative (DATALIST)
+            iterativeDFS(data);
+
+            // GraphSearch
+            graphSearch(data.goal, data.start);
+
+            // A* Algo
+            aStarGraph(data.goal, data.start);
+
+        }
+        else {
+            System.out.println("Invalid Keys or Values in JSON file");
+        }
+
+    }
+```
+
+The completed program can be found in the src folder.
+
 ## Results
 
 ### Backtracking
@@ -448,7 +560,7 @@ Goal:
 
 Solution Length = 26
 Nodes Examined = 418658
-Total time (m:s:ms) = 0:0:201
+Total time (m:s:ms) = 0:0:801
 
 left
 up
@@ -588,4 +700,73 @@ left
 
 ### Algorithm A<sup>*</sup>
 
+```
+A Star Algorithm
+Nodes gerenated : 1221
+Nodes examined : 753
+Total time (m:s:ms) = 0:0:61
+Solution Length: 52
+right
+up
+left
+left
+down
+right
+down
+left
+up
+right
+up
+left
+down
+right
+right
+up
+left
+down
+left
+down
+right
+right
+up
+left
+down
+left
+up
+right
+right
+down
+left
+up
+right
+up
+left
+down
+left
+up
+right
+right
+down
+left
+up
+left
+down
+right
+right
+up
+left
+down
+left
+up
+```
 ## Conclusion
+
+In conclusion, I can see that the quickest approach was the A Star algorithm with a time of 0:0:61.
+
+The order is as follows:
+- A-Star : 0:0:61
+- Backtracking Iterative : 0:0:746
+- Backtracking : 0:0:801
+- GraphSearch : 18:28:933
+
+Below is a graph with further comparisons (Nodes examined)

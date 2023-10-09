@@ -19,7 +19,8 @@ public class  Main {
             // GraphSearch
             graphSearch(data.goal, data.start);
 
-
+            // A* Algo
+            aStarGraph(data.goal, data.start);
 
         }
         else {
@@ -104,7 +105,7 @@ public class  Main {
         System.out.println("\n\nGraph Search");
         List<Node> open = new ArrayList<>();
         List<Node> closed = new ArrayList<>();
-        open.add(new Node(start, "", null));
+        open.add(new Node(start, goal,"", null));
         int nodesExamined = 0;
         int nodesGenerated = 0;
         while(!open.isEmpty()){
@@ -117,6 +118,41 @@ public class  Main {
             }
             closed.add(open.get(0));
             open.get(0).createSuccessors(open, closed);
+            open.addAll(open.get(0).successorBoards);
+            nodesGenerated += open.get(0).successorBoards.size();
+            open.remove(0);
+            if(nodesExamined > 600000){
+                break;
+            }
+            nodesExamined += 1;
+        }
+    }
+
+    private static void aStarGraph(List<Integer> goal, List<Integer> start){
+        long timeStart = System.currentTimeMillis();
+        System.out.println("\n\nA Star Algorithm");
+        List<Node> open = new ArrayList<>();
+        List<Node> closed = new ArrayList<>();
+        open.add(new Node(start, goal,"", null));
+        open.get(0).heuristics();
+        int nodesExamined = 0;
+        int nodesGenerated = 0;
+        while(!open.isEmpty()){
+            //Difference from GraphSearch- sorting by heuristic values
+            open.sort(new SortNodes());
+            if(open.get(0).board.getCurrentBoard().equals(goal)){
+                System.out.println("Nodes gerenated : " + nodesGenerated);
+                System.out.println("Nodes examined : " + nodesExamined);
+                timer(timeStart, System.currentTimeMillis());
+                printPath(open.get(0));
+                break;
+            }
+            closed.add(open.get(0));
+            open.get(0).createSuccessors(open, closed);
+            // Diff from GraphSearch - sorting by heuristic values
+            for (Node node : open.get(0).successorBoards){
+                node.heuristics();
+            }
             open.addAll(open.get(0).successorBoards);
             nodesGenerated += open.get(0).successorBoards.size();
             open.remove(0);
