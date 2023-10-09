@@ -560,7 +560,7 @@ Goal:
 
 Solution Length = 26
 Nodes Examined = 418658
-Total time (m:s:ms) = 0:0:801
+Total time (m:s:ms) = 0:0:201
 
 left
 up
@@ -761,12 +761,19 @@ up
 ```
 ## Conclusion
 
-In conclusion, I can see that the quickest approach was the A Star algorithm with a time of 0:0:61.
+In conclusion, I came up gathered the following data and made the below graphs.
 
-The order is as follows:
+The timed order is as follows:
+- Backtracking : 0:0:201
 - A-Star : 0:0:61
 - Backtracking Iterative : 0:0:746
-- Backtracking : 0:0:801
 - GraphSearch : 18:28:933
 
-Below is a graph with further comparisons (Nodes examined)
+The Backtracking algorithm seemed that fastest but that may be because I used a depth bound of 30.
+The Graph search took the longest, as it didn't optimize the Open list with heuristics.
+A-Star had the least amount of Nodes Examined and Generated, followed by the GraphSearch Algorithm.
+Overall, the results surprised me.
+
+Below is a graph with further comparisons.
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
