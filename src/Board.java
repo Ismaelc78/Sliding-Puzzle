@@ -23,6 +23,9 @@ public class Board {
         currentBoard = startBoard;
     }
 
+    public void setCurrentBoard(List<Integer> board){
+        currentBoard = board;
+    }
     public void printBoards(){
         printBoard(currentBoard, "Start");
         printBoard(goal, "Goal");
@@ -104,5 +107,13 @@ public class Board {
 
     public void addToVisitedBoards(){
         visitedBoards.put(currentBoard, count);
+    }
+
+    public List<Integer> getCurrentBoard(){
+        return currentBoard;
+    }
+
+    public List<Integer> getGoal(){
+        return goal;
     }
 }
