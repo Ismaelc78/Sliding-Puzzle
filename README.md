@@ -22,7 +22,7 @@ and aim to reach the Goal state by sliding the tiles around using the empty spac
 
 _Figure 1_
 
-![Alt](img.png "Figure 1")
+![Alt](src/img.png "Figure 1")
 
 The problem is to solve the puzzle using different uniformed and informed algorithmic approaches.
 
@@ -775,5 +775,5 @@ A-Star had the least amount of Nodes Examined and Generated, followed by the Gra
 Overall, the results surprised me.
 
 Below is a graph with further comparisons.
-![img_1.png](img_1.png)
-![img_2.png](img_2.png)
+![img_1.png](src/img_1.png)
+![img_2.png](src/img_2.png)
